@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liquid Reveal</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #06070b;
+        --panel: rgba(255, 255, 255, 0.06);
+        --text: #f5f7ff;
+        --muted: rgba(245, 247, 255, 0.72);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(81, 126, 255, 0.24), transparent 28%),
+          radial-gradient(circle at bottom right, rgba(255, 111, 195, 0.24), transparent 24%),
+          var(--bg);
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+
+      .stage {
+        width: min(92vw, 1120px);
+        padding: 24px;
+      }
+
+      .card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 32px;
+        min-height: 78vh;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
+        backdrop-filter: blur(22px);
+        isolation: isolate;
+      }
+
+      .image-layer,
+      canvas {
+        position: absolute;
+        inset: 0;
+      }
+
+      .image-layer img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      .image-layer.base img {
+        filter: saturate(0.95) contrast(1.03) brightness(0.9);
+      }
+
+      .image-layer.reveal {
+        z-index: 1;
+      }
+
+      canvas {
+        z-index: 2;
+        cursor: crosshair;
+      }
+
+      .copy {
+        position: absolute;
+        inset: auto 0 0 0;
+        z-index: 3;
+        padding: 32px 36px 34px;
+        background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.35) 38%, rgba(0, 0, 0, 0.7) 100%);
+        pointer-events: none;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        margin-bottom: 12px;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        background: rgba(255, 255, 255, 0.14);
+        color: var(--text);
+        backdrop-filter: blur(10px);
+      }
+
+      h1 {
+        margin: 0 0 10px;
+        font-size: clamp(1.8rem, 2.3vw, 2.6rem);
+        line-height: 1.05;
+        letter-spacing: -0.03em;
+        max-width: 640px;
+      }
+
+      p {
+        margin: 0;
+        max-width: 620px;
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.65;
+      }
+
+      @media (max-width: 720px) {
+        .stage {
+          padding: 12px;
+        }
+
+        .card {
+          min-height: 72vh;
+        }
+
+        .copy {
+          padding: 24px 22px 26px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="stage">
+      <section class="card" aria-label="Interactive liquid reveal artwork">
+        <div class="image-layer base">
+          <img src="Picture1.PNG" alt="First artwork" />
+        </div>
+        <canvas id="liquid"></canvas>
+        <div class="copy">
+          <span class="eyebrow">◉ Liquid reveal • interactive</span>
+          <h1>Premium motion with a fluid, cinematic touch.</h1>
+          <p>Move your cursor across the artwork to stir the reveal and watch the imagery flow like liquid light.</p>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const canvas = document.getElementById("liquid");
+      const ctx = canvas.getContext("2d");
+      const card = document.querySelector(".card");
+      const revealImage = new Image();
+      revealImage.src = "Picture2.PNG";
+
+      let pointer = { x: 0, y: 0 };
+      let target = { x: 0, y: 0 };
+      let frameId;
+      let ready = false;
+
+      revealImage.onload = () => {
+        ready = true;
+      };
+
+      function resizeCanvas() {
+        const rect = card.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        canvas.width = Math.round(rect.width * dpr);
+        canvas.height = Math.round(rect.height * dpr);
+        canvas.style.width = `${rect.width}px`;
+        canvas.style.height = `${rect.height}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        target.x = rect.width * 0.5;
+        target.y = rect.height * 0.5;
+        pointer.x = target.x;
+        pointer.y = target.y;
+      }
+
+      function drawLiquidBlob(x, y, width, height) {
+        const rect = card.getBoundingClientRect();
+        const t = performance.now() * 0.0016;
+        const points = [];
+        const segments = 32;
+
+        for (let i = 0; i < segments; i += 1) {
+          const angle = (i / segments) * Math.PI * 2;
+          const wobble =
+            Math.sin(angle * 3 + t * 1.2) * (height * 0.12) +
+            Math.sin(angle * 7 - t * 0.9) * (height * 0.06) +
+            Math.cos(angle * 2.2 + t * 0.65) * (height * 0.04);
+          const radius = width * 0.55 + wobble;
+          points.push({
+            x: x + Math.cos(angle) * radius,
+            y: y + Math.sin(angle) * radius * 0.9,
+          });
+        }
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+
+        for (let i = 1; i < points.length; i += 1) {
+          const prev = points[i - 1];
+          const curr = points[i];
+          const midX = (prev.x + curr.x) * 0.5;
+          const midY = (prev.y + curr.y) * 0.5;
+          ctx.quadraticCurveTo(prev.x, prev.y, midX, midY);
+        }
+
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(revealImage, 0, 0, rect.width, rect.height);
+        ctx.restore();
+      }
+
+      function animate() {
+        const rect = card.getBoundingClientRect();
+        pointer.x += (target.x - pointer.x) * 0.14;
+        pointer.y += (target.y - pointer.y) * 0.14;
+
+        ctx.clearRect(0, 0, rect.width, rect.height);
+
+        if (ready) {
+          const pulse = 150 + Math.sin(performance.now() * 0.0018) * 10;
+          drawLiquidBlob(pointer.x, pointer.y, pulse, pulse * 0.95);
+        }
+
+        frameId = window.requestAnimationFrame(animate);
+      }
+
+      function handleMove(event) {
+        const rect = card.getBoundingClientRect();
+        target.x = event.clientX - rect.left;
+        target.y = event.clientY - rect.top;
+      }
+
+      card.addEventListener("pointermove", handleMove);
+      card.addEventListener("pointerleave", () => {
+        const rect = card.getBoundingClientRect();
+        target.x = rect.width * 0.5;
+        target.y = rect.height * 0.5;
+      });
+
+      window.addEventListener("resize", resizeCanvas);
+      window.addEventListener("load", () => {
+        resizeCanvas();
+        animate();
+      });
+    </script>
+  </body>
+</html>
