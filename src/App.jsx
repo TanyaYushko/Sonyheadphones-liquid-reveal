@@ -1,6 +1,7 @@
 import LiquidRevealCard from './components/LiquidRevealCard';
-import picture1 from '../Picture1.PNG';
-import picture2 from '../Picture2.PNG';
+
+const picture1 = new URL('../Picture1.PNG', import.meta.url).href;
+const picture2 = new URL('../Picture2.PNG', import.meta.url).href;
 
 export default function App() {
   return (
