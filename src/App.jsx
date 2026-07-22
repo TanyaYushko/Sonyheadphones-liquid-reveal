@@ -1,12 +1,16 @@
-import LiquidRevealCard from './components/LiquidRevealCard';
+import InfiniteCarousel from './components/InfiniteCarousel';
 
-const picture1 = new URL('../Picture1.PNG', import.meta.url).href;
-const picture2 = new URL('../Picture2.PNG', import.meta.url).href;
+const galleryImages = [
+  new URL('../Gallery1.jpg', import.meta.url).href,
+  new URL('../Gallery2.jpg', import.meta.url).href,
+  new URL('../Gallery3.jpg', import.meta.url).href,
+  new URL('../Gallery4.jpg', import.meta.url).href,
+];
 
 export default function App() {
   return (
     <main className="landing-shell">
-      <LiquidRevealCard image1={picture1} image2={picture2} />
+      <InfiniteCarousel images={galleryImages} />
     </main>
   );
 }

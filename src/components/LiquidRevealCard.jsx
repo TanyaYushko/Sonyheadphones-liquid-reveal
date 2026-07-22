@@ -1,12 +1,17 @@
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
-const headlineText = 'Premium motion with a fluid, cinematic touch.';
-
-export default function LiquidRevealCard({ image1, image2 }) {
+export default function LiquidRevealCard({
+  image1,
+  image2,
+  eyebrow = 'Gallery',
+  headline = 'Sony’s intelligent industry-leading noise-canceling headphones',
+  description = 'With premium sound, elevate your listening experience with the ability to personalize and control everything you hear.',
+  primaryLabel = 'Shop now',
+  secondaryLabel = 'Watch story',
+}) {
   const canvasRef = useRef(null);
   const cardRef = useRef(null);
-  const [pointer, setPointer] = useState({ x: 0, y: 0 });
   const [revealImage, setRevealImage] = useState(null);
   const [ready, setReady] = useState(false);
 
@@ -159,7 +164,6 @@ export default function LiquidRevealCard({ image1, image2 }) {
       const rect = card.getBoundingClientRect();
       targetX = event.clientX - rect.left;
       targetY = event.clientY - rect.top;
-      setPointer({ x: targetX, y: targetY });
     };
 
     resize();
@@ -178,7 +182,6 @@ export default function LiquidRevealCard({ image1, image2 }) {
       const rect = card.getBoundingClientRect();
       targetX = rect.width * 0.5;
       targetY = rect.height * 0.5;
-      setPointer({ x: targetX, y: targetY });
     });
 
     return () => {
@@ -190,50 +193,78 @@ export default function LiquidRevealCard({ image1, image2 }) {
 
   return (
     <section className="stage">
-      <div className="card" ref={cardRef} aria-label="Interactive liquid reveal artwork">
+      <div className="card" ref={cardRef} aria-label="Interactive Sony headphones showcase">
         <div className="image-layer base">
-          <img src={image1} alt="First artwork" />
+          <img src={image1} alt="Sony headphones" />
         </div>
         <canvas ref={canvasRef} id="liquid" />
         <div className="copy">
-          <span className="eyebrow">SONY</span>
-          <motion.h1
-          aria-label={headlineText}
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.045,
-                delayChildren: 0.06,
-              },
-            },
-          }}
-        >
-          {[...headlineText].map((char, index) => (
-            <motion.span
-              key={`${char}-${index}`}
-              className="headline-letter"
-              variants={{
-                hidden: { opacity: 0, y: 12 },
-                visible: { opacity: 1, y: 0 },
-              }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+          <div className="copy-stack">
+            <motion.p
+              className="eyebrow"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
             >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
-          ))}
-        </motion.h1>
-        <motion.p
-          className="hero-paragraph"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.9 }}
-        >
-          Move your cursor across the artwork to stir the reveal and watch the imagery flow like liquid light.
-        </motion.p>
+              {eyebrow}
+            </motion.p>
+            <motion.h1
+              aria-label={headline}
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.035,
+                    delayChildren: 0.08,
+                  },
+                },
+              }}
+            >
+              {[...headline].map((char, index) => (
+                <motion.span
+                  key={`${char}-${index}`}
+                  className="headline-letter"
+                  variants={{
+                    hidden: { opacity: 0, y: 12 },
+                    visible: { opacity: 1, y: 0 },
+                  }}
+                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {char === ' ' ? '\u00A0' : char}
+                </motion.span>
+              ))}
+            </motion.h1>
+            <motion.p
+              className="hero-paragraph"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.85 }}
+            >
+              {description}
+            </motion.p>
+            <motion.div
+              className="hero-actions"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 1.05 }}
+            >
+              <a className="button primary" href="#">{primaryLabel}</a>
+              <a className="button secondary" href="#">{secondaryLabel}</a>
+            </motion.div>
+            <motion.div
+              className="feature-row"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 1.2 }}
+            >
+              <span className="feature-pill">Adaptive ANC</span>
+              <span className="feature-pill">Spatial Audio</span>
+              <span className="feature-pill">24h battery</span>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>

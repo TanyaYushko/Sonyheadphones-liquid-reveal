@@ -1,7 +1,7 @@
 :root {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: #f5f7ff;
-  background: #06070b;
+  background: #05070d;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -16,15 +16,9 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  background:
-    radial-gradient(circle at top left, rgba(81, 126, 255, 0.24), transparent 28%),
-    radial-gradient(circle at bottom right, rgba(255, 111, 195, 0.24), transparent 24%),
-    #06070b;
+  background: #05070d;
   color: #f5f7ff;
-  display: grid;
-  place-items: center;
   overflow-x: hidden;
-  overflow-y: auto;
 }
 
 #root {
@@ -33,179 +27,128 @@ body {
 
 .landing-shell {
   min-height: 100dvh;
-  display: grid;
-  place-items: center;
-  padding: clamp(16px, 2.4vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(20px, 3vw, 40px);
 }
 
-.stage {
-  width: min(92vw, 1120px);
-  padding: clamp(12px, 2vw, 24px);
+.carousel-shell {
+  width: min(100%, 1360px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.card {
+.carousel-copy {
+  max-width: 560px;
+  padding-left: 8px;
+}
+
+.carousel-eyebrow {
+  margin: 0 0 10px;
+  font-size: 0.78rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: #8ff0ff;
+}
+
+.carousel-copy h1 {
+  margin: 0 0 10px;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+.carousel-description {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(245, 247, 255, 0.78);
+}
+
+.carousel-stage {
   position: relative;
+  min-height: 560px;
+  perspective: 1600px;
+  perspective-origin: center;
   overflow: hidden;
-  border-radius: 32px;
-  min-height: 78vh;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.03));
-  backdrop-filter: blur(22px);
-  isolation: isolate;
+  border-radius: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
+  box-shadow: 0 32px 70px rgba(0, 0, 0, 0.32);
 }
 
-.image-layer,
-canvas {
+.carousel-track {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.image-layer img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-.image-layer.base img {
-  filter: saturate(0.95) contrast(1.03) brightness(0.9);
-}
-
-canvas {
-  z-index: 2;
-  cursor: crosshair;
-}
-
-.copy {
-  position: absolute;
-  inset: auto 0 0 0;
-  z-index: 3;
-  padding: clamp(24px, 3.2vw, 34px) clamp(24px, 3.2vw, 36px);
-  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.35) 38%, rgba(0, 0, 0, 0.7) 100%);
-  pointer-events: none;
-}
-
-.eyebrow {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
-  margin-bottom: 12px;
-  border-radius: 999px;
-  font-size: 0.82rem;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  background: rgba(255, 255, 255, 0.14);
-  color: #f5f7ff;
-  backdrop-filter: blur(10px);
+  justify-content: center;
+  transform-style: preserve-3d;
 }
 
-h1 {
-  margin: 0 0 10px;
-  font-size: clamp(1.8rem, 2.3vw, 2.6rem);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  max-width: 640px;
-}
-
-.headline-letter {
-  display: inline-block;
+.carousel-card {
+  position: absolute;
+  width: min(28vw, 320px);
+  height: min(44vw, 420px);
+  max-width: 320px;
+  max-height: 420px;
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 24px 56px rgba(0, 0, 0, 0.36);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #0b1220;
   will-change: transform, opacity;
 }
 
-.hero-paragraph {
-  margin: 0;
-  max-width: 620px;
-  color: rgba(245, 247, 255, 0.72);
-  font-size: 1rem;
-  line-height: 1.65;
+.carousel-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-@media (max-width: 1024px) {
-  .card {
-    min-height: min(72dvh, 720px);
+@media (max-width: 900px) {
+  .carousel-shell {
+    gap: 18px;
+  }
+
+  .carousel-stage {
+    min-height: 470px;
+  }
+
+  .carousel-card {
+    width: min(38vw, 280px);
+    height: min(52vw, 360px);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .landing-shell {
-    padding: 10px;
+    padding: 16px;
   }
 
-  .stage {
-    width: min(100%, 100vw);
-    padding: 0;
+  .carousel-copy {
+    padding-left: 0;
   }
 
-  .card {
-    width: 100%;
-    height: min(74dvh, 620px);
-    max-height: calc(100dvh - 20px);
-    min-height: 0;
+  .carousel-copy h1 {
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+  }
+
+  .carousel-description {
+    font-size: 0.95rem;
+  }
+
+  .carousel-stage {
+    min-height: 360px;
     border-radius: 24px;
   }
 
-  .image-layer img {
-    object-fit: contain;
-    transform: scale(1.16) translateY(10px);
-    transform-origin: center center;
-  }
-
-  .copy {
-    padding: clamp(18px, 4.2vw, 24px) clamp(16px, 4.4vw, 22px) clamp(22px, 4.8vw, 26px);
-  }
-
-  .eyebrow {
-    padding: 7px 11px;
-    margin-bottom: 10px;
-    font-size: 0.74rem;
-  }
-
-  h1 {
-    font-size: clamp(1.35rem, 5.2vw, 1.95rem);
-    max-width: 94%;
-  }
-
-  .hero-paragraph {
-    max-width: 94%;
-    font-size: clamp(0.9rem, 3vw, 1rem);
-    line-height: 1.55;
-  }
-}
-
-@media (max-width: 480px) {
-  .landing-shell {
-    padding: 8px;
-  }
-
-  .card {
-    min-height: min(74dvh, 560px);
-    border-radius: 20px;
-  }
-
-  .image-layer img {
-    transform: scale(1.18) translateY(12px);
-  }
-
-  .copy {
-    padding: 16px 16px 18px;
-  }
-
-  .eyebrow {
-    padding: 6px 10px;
-    font-size: 0.7rem;
-  }
-
-  h1 {
-    font-size: clamp(1.15rem, 6.4vw, 1.45rem);
-    margin-bottom: 8px;
-  }
-
-  .hero-paragraph {
-    font-size: 0.86rem;
+  .carousel-card {
+    width: min(48vw, 220px);
+    height: min(66vw, 300px);
+    border-radius: 22px;
   }
 }
