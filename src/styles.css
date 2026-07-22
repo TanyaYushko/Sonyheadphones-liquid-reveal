@@ -68,10 +68,11 @@ body {
   height: 72px;
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  border: 1px solid rgba(255,255,255,0.38);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 0 28px rgba(255,255,255,0.18);
+  border: 1px solid rgba(255,255,255,0.3);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 0 30px rgba(255,255,255,0.14);
   pointer-events: none;
   z-index: 3;
+  backdrop-filter: blur(2px);
 }
 
 @media (max-width: 720px) {

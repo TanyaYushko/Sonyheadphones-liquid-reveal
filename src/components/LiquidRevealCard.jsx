@@ -45,21 +45,22 @@ export default function LiquidRevealCard({ image1, image2 }) {
       ctx.clearRect(0, 0, rect.width, rect.height);
 
       if (ready && revealImage.complete) {
-        const t = performance.now() * 0.0016;
+        const t = performance.now() * 0.0014;
         const points = [];
-        const segments = 32;
-        const size = 150 + Math.sin(performance.now() * 0.0018) * 10;
+        const segments = 40;
+        const size = 170 + Math.sin(performance.now() * 0.0015) * 12;
+        const softness = size * 0.18;
 
         for (let i = 0; i < segments; i += 1) {
           const angle = (i / segments) * Math.PI * 2;
           const wobble =
-            Math.sin(angle * 3 + t * 1.2) * (size * 0.12) +
-            Math.sin(angle * 7 - t * 0.9) * (size * 0.06) +
-            Math.cos(angle * 2.2 + t * 0.65) * (size * 0.04);
-          const radius = size * 0.55 + wobble;
+            Math.sin(angle * 3 + t * 1.4) * softness +
+            Math.sin(angle * 6 - t * 0.8) * (softness * 0.42) +
+            Math.cos(angle * 2.2 + t * 0.7) * (softness * 0.24);
+          const radius = size * 0.56 + wobble;
           points.push({
             x: currentX + Math.cos(angle) * radius,
-            y: currentY + Math.sin(angle) * radius * 0.9,
+            y: currentY + Math.sin(angle) * radius * 0.92,
           });
         }
 
