@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 
 const headlineText = 'Premium motion with a fluid, cinematic touch.';
@@ -131,20 +132,43 @@ export default function LiquidRevealCard({ image1, image2 }) {
         <canvas ref={canvasRef} id="liquid" />
         <div className="copy">
           <span className="eyebrow">SONY</span>
-          <h1 aria-label={headlineText}>
-            {[...headlineText].map((char, index) => (
-              <span
-                key={`${char}-${index}`}
-                className="headline-letter"
-                style={{ animationDelay: `${index * 0.028 + 0.06}s` }}
-              >
-                {char === ' ' ? '\u00A0' : char}
-              </span>
-            ))}
-          </h1>
-          <p className="hero-paragraph">
-            Move your cursor across the artwork to stir the reveal and watch the imagery flow like liquid light.
-          </p>
+          <motion.h1
+          aria-label={headlineText}
+          initial="hidden"
+          animate="visible"
+          variants={{
+            hidden: { opacity: 0 },
+            visible: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.045,
+                delayChildren: 0.06,
+              },
+            },
+          }}
+        >
+          {[...headlineText].map((char, index) => (
+            <motion.span
+              key={`${char}-${index}`}
+              className="headline-letter"
+              variants={{
+                hidden: { opacity: 0, y: 12 },
+                visible: { opacity: 1, y: 0 },
+              }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {char === ' ' ? '\u00A0' : char}
+            </motion.span>
+          ))}
+        </motion.h1>
+        <motion.p
+          className="hero-paragraph"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.9 }}
+        >
+          Move your cursor across the artwork to stir the reveal and watch the imagery flow like liquid light.
+        </motion.p>
         </div>
       </div>
     </section>
