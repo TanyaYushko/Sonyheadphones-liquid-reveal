@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-const headlineLines = ['Hear Every Detail.', 'Feel Every Emotion.'];
+const headlineText = 'Premium motion with a fluid, cinematic touch.';
 
 export default function LiquidRevealCard({ image1, image2 }) {
   const canvasRef = useRef(null);
@@ -8,10 +8,8 @@ export default function LiquidRevealCard({ image1, image2 }) {
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
   const [revealImage, setRevealImage] = useState(null);
   const [ready, setReady] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const img = new Image();
     img.src = image2;
     img.onload = () => {
@@ -55,27 +53,25 @@ export default function LiquidRevealCard({ image1, image2 }) {
 
     const draw = () => {
       const rect = card.getBoundingClientRect();
-      currentX += (targetX - currentX) * 0.16;
-      currentY += (targetY - currentY) * 0.16;
+      currentX += (targetX - currentX) * 0.14;
+      currentY += (targetY - currentY) * 0.14;
       ctx.clearRect(0, 0, rect.width, rect.height);
 
       if (ready && revealImage && revealImage.complete) {
-        const t = performance.now() * 0.0012;
+        const t = performance.now() * 0.0016;
         const points = [];
-        const segments = 44;
-        const size = 150 + Math.sin(performance.now() * 0.0013) * 12;
-        const softness = size * 0.16;
+        const segments = 32;
 
         for (let i = 0; i < segments; i += 1) {
           const angle = (i / segments) * Math.PI * 2;
           const wobble =
-            Math.sin(angle * 3 + t * 1.2) * softness +
-            Math.sin(angle * 7 - t * 0.8) * (softness * 0.42) +
-            Math.cos(angle * 2.2 + t * 0.6) * (softness * 0.24);
-          const radius = size * 0.56 + wobble;
+            Math.sin(angle * 3 + t * 1.2) * (150 * 0.12) +
+            Math.sin(angle * 7 - t * 0.9) * (150 * 0.06) +
+            Math.cos(angle * 2.2 + t * 0.65) * (150 * 0.04);
+          const radius = 150 * 0.55 + wobble;
           points.push({
             x: currentX + Math.cos(angle) * radius,
-            y: currentY + Math.sin(angle) * radius * 0.92,
+            y: currentY + Math.sin(angle) * radius * 0.9,
           });
         }
 
@@ -127,36 +123,29 @@ export default function LiquidRevealCard({ image1, image2 }) {
   }, [ready, revealImage]);
 
   return (
-    <section className={`hero-layout ${mounted ? 'is-ready' : ''}`}>
-      <div className="hero-copy">
-        <div className="hero-logo">SONY</div>
-        <h1 className="hero-headline" aria-label="Hear Every Detail. Feel Every Emotion.">
-          {headlineLines.map((line, lineIndex) => (
-            <div className="hero-line" key={line}>
-              {[...line].map((char, charIndex) => {
-                const delay = lineIndex * 0.12 + charIndex * 0.025 + 0.15;
-                return (
-                  <span
-                    className="hero-letter"
-                    key={`${line}-${charIndex}`}
-                    style={{ animationDelay: `${delay}s` }}
-                  >
-                    {char === ' ' ? '\u00A0' : char}
-                  </span>
-                );
-              })}
-            </div>
-          ))}
-        </h1>
-        <p className="hero-paragraph">
-          Premium noise cancellation engineered for people who demand pure sound, complete focus and an immersive listening experience.
-        </p>
-      </div>
-
-      <div className="hero-visual" ref={cardRef}>
-        <img className="base-image" src={image1} alt="Sony headphones" />
-        <canvas ref={canvasRef} className="reveal-canvas" />
-        <div className="cursor-hint" style={{ left: pointer.x, top: pointer.y }} />
+    <section className="stage">
+      <div className="card" ref={cardRef} aria-label="Interactive liquid reveal artwork">
+        <div className="image-layer base">
+          <img src={image1} alt="First artwork" />
+        </div>
+        <canvas ref={canvasRef} id="liquid" />
+        <div className="copy">
+          <span className="eyebrow">SONY</span>
+          <h1 aria-label={headlineText}>
+            {[...headlineText].map((char, index) => (
+              <span
+                key={`${char}-${index}`}
+                className="headline-letter"
+                style={{ animationDelay: `${index * 0.028 + 0.06}s` }}
+              >
+                {char === ' ' ? '\u00A0' : char}
+              </span>
+            ))}
+          </h1>
+          <p className="hero-paragraph">
+            Move your cursor across the artwork to stir the reveal and watch the imagery flow like liquid light.
+          </p>
+        </div>
       </div>
     </section>
   );
