@@ -1,16 +1,27 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function LiquidRevealCard({ image1, image2 }) {
   const canvasRef = useRef(null);
   const cardRef = useRef(null);
   const [pointer, setPointer] = useState({ x: 0, y: 0 });
+  const [revealImage, setRevealImage] = useState(null);
   const [ready, setReady] = useState(false);
 
-  const revealImage = useMemo(() => {
+  useEffect(() => {
     const img = new Image();
     img.src = image2;
-    img.onload = () => setReady(true);
-    return img;
+    img.onload = () => {
+      setRevealImage(img);
+      setReady(true);
+    };
+    img.onerror = () => {
+      setReady(false);
+    };
+
+    return () => {
+      img.onload = null;
+      img.onerror = null;
+    };
   }, [image2]);
 
   useEffect(() => {
@@ -44,7 +55,7 @@ export default function LiquidRevealCard({ image1, image2 }) {
       currentY += (targetY - currentY) * 0.14;
       ctx.clearRect(0, 0, rect.width, rect.height);
 
-      if (ready && revealImage.complete) {
+      if (ready && revealImage && revealImage.complete) {
         const t = performance.now() * 0.0014;
         const points = [];
         const segments = 40;
