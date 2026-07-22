@@ -62,6 +62,42 @@ export default function LiquidRevealCard({ image1, image2 }) {
         const t = performance.now() * 0.0016;
         const points = [];
         const segments = 32;
+        const isCompact = window.innerWidth < 1024;
+        const fit = isCompact ? 'contain' : 'cover';
+        const containerWidth = rect.width;
+        const containerHeight = rect.height;
+        const imageWidth = revealImage.naturalWidth || containerWidth;
+        const imageHeight = revealImage.naturalHeight || containerHeight;
+        let drawWidth = containerWidth;
+        let drawHeight = containerHeight;
+        let drawX = 0;
+        let drawY = 0;
+
+        if (fit === 'cover') {
+          if (containerWidth / containerHeight > imageWidth / imageHeight) {
+            drawHeight = containerHeight;
+            drawWidth = (imageWidth / imageHeight) * drawHeight;
+            drawX = (containerWidth - drawWidth) / 2;
+            drawY = 0;
+          } else {
+            drawWidth = containerWidth;
+            drawHeight = (imageHeight / imageWidth) * drawWidth;
+            drawX = 0;
+            drawY = (containerHeight - drawHeight) / 2;
+          }
+        } else {
+          if (containerWidth / containerHeight > imageWidth / imageHeight) {
+            drawWidth = containerWidth;
+            drawHeight = (imageHeight / imageWidth) * drawWidth;
+            drawX = 0;
+            drawY = (containerHeight - drawHeight) / 2;
+          } else {
+            drawHeight = containerHeight;
+            drawWidth = (imageWidth / imageHeight) * drawHeight;
+            drawX = (containerWidth - drawWidth) / 2;
+            drawY = 0;
+          }
+        }
 
         for (let i = 0; i < segments; i += 1) {
           const angle = (i / segments) * Math.PI * 2;
@@ -90,7 +126,7 @@ export default function LiquidRevealCard({ image1, image2 }) {
 
         ctx.closePath();
         ctx.clip();
-        ctx.drawImage(revealImage, 0, 0, rect.width, rect.height);
+        ctx.drawImage(revealImage, drawX, drawY, drawWidth, drawHeight);
         ctx.restore();
       }
 

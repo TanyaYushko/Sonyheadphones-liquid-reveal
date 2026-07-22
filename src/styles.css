@@ -23,7 +23,8 @@ body {
   color: #f5f7ff;
   display: grid;
   place-items: center;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 #root {
@@ -31,15 +32,15 @@ body {
 }
 
 .landing-shell {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: clamp(16px, 2.4vw, 24px);
 }
 
 .stage {
   width: min(92vw, 1120px);
-  padding: 24px;
+  padding: clamp(12px, 2vw, 24px);
 }
 
 .card {
@@ -58,12 +59,15 @@ body {
 canvas {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .image-layer img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
   display: block;
 }
 
@@ -80,7 +84,7 @@ canvas {
   position: absolute;
   inset: auto 0 0 0;
   z-index: 3;
-  padding: 32px 36px 34px;
+  padding: clamp(24px, 3.2vw, 34px) clamp(24px, 3.2vw, 36px);
   background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.35) 38%, rgba(0, 0, 0, 0.7) 100%);
   pointer-events: none;
 }
@@ -121,20 +125,81 @@ h1 {
   line-height: 1.65;
 }
 
-@media (max-width: 720px) {
+@media (max-width: 1024px) {
+  .card {
+    min-height: min(72dvh, 720px);
+  }
+}
+
+@media (max-width: 768px) {
   .landing-shell {
-    padding: 12px;
+    padding: 10px;
   }
 
   .stage {
-    padding: 12px;
+    width: min(100%, 100vw);
+    padding: 0;
   }
 
   .card {
-    min-height: 72vh;
+    width: 100%;
+    height: min(74dvh, 620px);
+    max-height: calc(100dvh - 20px);
+    min-height: 0;
+    border-radius: 24px;
+  }
+
+  .image-layer img {
+    object-fit: contain;
   }
 
   .copy {
-    padding: 24px 22px 26px;
+    padding: clamp(18px, 4.2vw, 24px) clamp(16px, 4.4vw, 22px) clamp(20px, 4.6vw, 24px);
+  }
+
+  .eyebrow {
+    padding: 7px 11px;
+    margin-bottom: 10px;
+    font-size: 0.74rem;
+  }
+
+  h1 {
+    font-size: clamp(1.35rem, 5.2vw, 1.95rem);
+    max-width: 94%;
+  }
+
+  .hero-paragraph {
+    max-width: 94%;
+    font-size: clamp(0.9rem, 3vw, 1rem);
+    line-height: 1.55;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-shell {
+    padding: 8px;
+  }
+
+  .card {
+    min-height: min(74dvh, 560px);
+    border-radius: 20px;
+  }
+
+  .copy {
+    padding: 16px 16px 18px;
+  }
+
+  .eyebrow {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+
+  h1 {
+    font-size: clamp(1.15rem, 6.4vw, 1.45rem);
+    margin-bottom: 8px;
+  }
+
+  .hero-paragraph {
+    font-size: 0.86rem;
   }
 }
