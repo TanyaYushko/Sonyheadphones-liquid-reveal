@@ -37,6 +37,10 @@ export default function LiquidRevealCard({ image1, image2 }) {
     let targetY = 0;
     let currentX = 0;
     let currentY = 0;
+    let autoPlayActive = false;
+    let autoPlayStarted = false;
+    let autoPlayStartTime = 0;
+    const isTouchDevice = window.matchMedia('(hover: none) and (pointer: coarse)').matches || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     const resize = () => {
       const rect = card.getBoundingClientRect();
@@ -54,6 +58,23 @@ export default function LiquidRevealCard({ image1, image2 }) {
 
     const draw = () => {
       const rect = card.getBoundingClientRect();
+
+      if (isTouchDevice && autoPlayActive) {
+        const elapsed = performance.now() - autoPlayStartTime;
+        const progress = Math.min(1, elapsed / 1400);
+        const eased = 0.5 - 0.5 * Math.cos(progress * Math.PI);
+        const finalX = rect.width * 0.6;
+        const finalY = rect.height * 0.54;
+        targetX = rect.width * 0.45 + (finalX - rect.width * 0.45) * eased;
+        targetY = rect.height * 0.46 + (finalY - rect.height * 0.46) * eased;
+
+        if (progress >= 1) {
+          autoPlayActive = false;
+          targetX = finalX;
+          targetY = finalY;
+        }
+      }
+
       currentX += (targetX - currentX) * 0.14;
       currentY += (targetY - currentY) * 0.14;
       ctx.clearRect(0, 0, rect.width, rect.height);
@@ -134,6 +155,7 @@ export default function LiquidRevealCard({ image1, image2 }) {
     };
 
     const handleMove = (event) => {
+      autoPlayActive = false;
       const rect = card.getBoundingClientRect();
       targetX = event.clientX - rect.left;
       targetY = event.clientY - rect.top;
@@ -141,6 +163,13 @@ export default function LiquidRevealCard({ image1, image2 }) {
     };
 
     resize();
+
+    if (isTouchDevice && !autoPlayStarted) {
+      autoPlayStarted = true;
+      autoPlayActive = true;
+      autoPlayStartTime = performance.now();
+    }
+
     draw();
 
     window.addEventListener('resize', resize);

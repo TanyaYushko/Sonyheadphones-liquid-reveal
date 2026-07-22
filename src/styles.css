@@ -151,10 +151,12 @@ h1 {
 
   .image-layer img {
     object-fit: contain;
+    transform: scale(1.16) translateY(10px);
+    transform-origin: center center;
   }
 
   .copy {
-    padding: clamp(18px, 4.2vw, 24px) clamp(16px, 4.4vw, 22px) clamp(20px, 4.6vw, 24px);
+    padding: clamp(18px, 4.2vw, 24px) clamp(16px, 4.4vw, 22px) clamp(22px, 4.8vw, 26px);
   }
 
   .eyebrow {
@@ -183,6 +185,10 @@ h1 {
   .card {
     min-height: min(74dvh, 560px);
     border-radius: 20px;
+  }
+
+  .image-layer img {
+    transform: scale(1.18) translateY(12px);
   }
 
   .copy {
